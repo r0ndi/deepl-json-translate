@@ -1,7 +1,7 @@
+import { getHbsBracketsPlaceholders, revertHbsBracketsFromPlaceholders } from '../helpers/hbs-rackets'
 import { Formality, Language, TagHandlingMode, TranslateTextOptions, Translator } from 'deepl-node'
 import { TranslateFileConfig } from '../types/local'
 
-const BRACKET_VARIABLE_REPLACEMENT = 'XXX'
 let cachedTranslations: Record<string, string> = {}
 
 export function getClient(): Translator {
@@ -13,11 +13,11 @@ export function translate(client: Translator, config: TranslateFileConfig): (tex
     if (cachedTranslations[text]) return cachedTranslations[text]
     if (!text.length) return ''
 
-    const [modifiedText, placeholders] = getBracketsPlaceholders(text)
+    const [modifiedText, placeholders] = getHbsBracketsPlaceholders(text)
     const { text: translatedText } = await client.translateText(
       modifiedText, config.sourceLanguage || null, config.outputLanguage, getOptions(),
     )
-    const translated = revertBracketsFromPlaceholders(translatedText, placeholders)
+    const translated = revertHbsBracketsFromPlaceholders(translatedText, placeholders)
     cachedTranslations[text] = translated
     return translated
   }
@@ -38,18 +38,4 @@ function getOptions(): TranslateTextOptions {
     ...(process.env.DEEPL_PRESERVE_FORMATTING ? { preserveFormatting: process.env.DEEPL_PRESERVE_FORMATTING === '1' } : {}),
     ...(process.env.DEEPL_CONTEXT ? { context: process.env.DEEPL_CONTEXT } : {}),
   }
-}
-
-/* Hide .HBS variables behind placeholder so as not to translate them */
-function getBracketsPlaceholders(text: string): [string, string[]] {
-  const placeholders: string[] = []
-  const modifiedText = text.replace(/\{\{(.*?)\}\}/g, (_, match) => {
-    placeholders.push(match)
-    return BRACKET_VARIABLE_REPLACEMENT
-  })
-  return [modifiedText, placeholders]
-}
-
-function revertBracketsFromPlaceholders(text: string, placeholders: string[]): string {
-  return text.replace(new RegExp(BRACKET_VARIABLE_REPLACEMENT, 'g'), () => `{{${placeholders.shift()}}}`)
 }
