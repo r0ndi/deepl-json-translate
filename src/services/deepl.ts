@@ -1,4 +1,4 @@
-import { getHbsBracketsPlaceholders, revertHbsBracketsFromPlaceholders } from '../helpers/hbs-rackets'
+import { getHbsBracketsPlaceholders, revertHbsBracketsFromPlaceholders } from '../helpers/hbs-brackets'
 import { Formality, Language, TagHandlingMode, TranslateTextOptions, Translator } from 'deepl-node'
 import { TranslateFileConfig } from '../types/local'
 
