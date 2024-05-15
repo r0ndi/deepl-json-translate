@@ -13,20 +13,11 @@ export function translate(client: Translator, config: TranslateFileConfig): (tex
     if (cachedTranslations[text]) return cachedTranslations[text]
     if (!text.length) return ''
 
-    const placeholders: string[] = []
-    const modifiedText = text.replace(/\{\{(.*?)\}\}/g, (_, match) => {
-      placeholders.push(match)
-      return BRACKET_VARIABLE_REPLACEMENT
-    })
-
+    const [modifiedText, placeholders] = getBracketsPlaceholders(text)
     const { text: translatedText } = await client.translateText(
       modifiedText, config.sourceLanguage || null, config.outputLanguage, getOptions(),
     )
-    const translated = translatedText.replace(
-      new RegExp(BRACKET_VARIABLE_REPLACEMENT, 'g'),
-      () => `{{${placeholders.shift()}}}`,
-    )
-
+    const translated = revertBracketsFromPlaceholders(translatedText, placeholders)
     cachedTranslations[text] = translated
     return translated
   }
@@ -47,4 +38,18 @@ function getOptions(): TranslateTextOptions {
     ...(process.env.DEEPL_PRESERVE_FORMATTING ? { preserveFormatting: process.env.DEEPL_PRESERVE_FORMATTING === '1' } : {}),
     ...(process.env.DEEPL_CONTEXT ? { context: process.env.DEEPL_CONTEXT } : {}),
   }
+}
+
+/* Hide .HBS variables behind placeholder so as not to translate them */
+function getBracketsPlaceholders(text: string): [string, string[]] {
+  const placeholders: string[] = []
+  const modifiedText = text.replace(/\{\{(.*?)\}\}/g, (_, match) => {
+    placeholders.push(match)
+    return BRACKET_VARIABLE_REPLACEMENT
+  })
+  return [modifiedText, placeholders]
+}
+
+function revertBracketsFromPlaceholders(text: string, placeholders: string[]): string {
+  return text.replace(new RegExp(BRACKET_VARIABLE_REPLACEMENT, 'g'), () => `{{${placeholders.shift()}}}`)
 }
