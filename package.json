@@ -1,0 +1,32 @@
+{
+  "name": "deepl-json-translate",
+  "version": "1.0.0",
+  "description": "DeepL JSON file translate",
+  "main": "src/boot.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/boot.js",
+    "start:dev": "ts-node src/boot.ts"
+  },
+  "keywords": [
+    "deepl",
+    "json-translate",
+    "deepl-translate",
+    "deepl json translate"
+  ],
+  "dependencies": {
+    "axios": "^1.6.8",
+    "deepl-node": "^1.13.0",
+    "dotenv": "^16.4.5",
+    "minimist": "^1.2.8",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.2"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/minimist": "^1.2.5",
+    "@types/node": "^20.11.28"
+  },
+  "author": "Konrad Sądel",
+  "license": "ISC"
+}

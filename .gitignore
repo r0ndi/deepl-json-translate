@@ -1,0 +1,10 @@
+# generatic
+node_modules
+dist
+
+# others
+.env
+sources/*
+!sources/.gitkeep
+outputs/*
+!outputs/.gitkeep
