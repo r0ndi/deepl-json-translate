@@ -8,7 +8,7 @@ export function getClient(): Translator {
   return new Translator(process.env.DEEPL_API_KEY || '')
 }
 
-export function translate(client: Translator, config: TranslateFileConfig): (text: string) => Promise<string> {
+export function translateFn(client: Translator, config: TranslateFileConfig): (text: string) => Promise<string> {
   return async (text: string): Promise<string> => {
     if (cachedTranslations[text]) return cachedTranslations[text]
     if (!text.length) return ''

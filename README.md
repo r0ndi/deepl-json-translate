@@ -23,6 +23,7 @@ Lib to translate JSON / JS object by deepl api
 - `--ol` - output language
 - `--sl` - source language
 - `--s` - source filename
+- `--allFiles true` - translate all files from sources directory
 
 ## Author
 Konrad Sądel @ 2024
