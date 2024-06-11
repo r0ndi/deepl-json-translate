@@ -4,9 +4,8 @@
   "description": "DeepL JSON file translate",
   "main": "src/boot.ts",
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/boot.js",
-    "start:dev": "ts-node src/boot.ts"
+    "generate-csv": "ts-node src/generate-csv.ts",
+    "translate": "ts-node src/run-translation.ts"
   },
   "keywords": [
     "deepl",

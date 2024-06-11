@@ -16,8 +16,12 @@ Lib to translate JSON / JS object by deepl api
 
 1. Translate `sources/test.json` to `outputs/test.json`
     ```shell
-    npm run start:dev -- --sl en --ol de --s test.json
+    npm run translate -- --sl en --ol de --s test.json
     ```
+
+## Scripts
+- `npm run translate -- --sl en --ol de --allFiles true` -> transaltions all files
+- `npm run generate-csv` -> generate csv file with summary
 
 ## Arguments
 - `--ol` - output language

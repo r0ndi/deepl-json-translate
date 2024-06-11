@@ -3,10 +3,9 @@ import { deepMap } from '../helpers/deep-map'
 import { TranslationConfig } from '../types/local'
 import { getClient, getSupportedTargetLanguages, translateFn } from './deepl'
 import { SourceLanguageCode, TargetLanguageCode, Translator } from 'deepl-node'
-import { formatJSObject, formatTSObject } from '../helpers/utils'
+import { formatJSObject, formatTSObject, isSupportedFile } from '../helpers/utils'
 
 const BASE_PATH = __dirname + '/../..'
-const SUPPORTED_EXTENSIONS = ['.json', '.js', '.ts']
 
 export async function translate(config: TranslationConfig): Promise<void> {
   const deeplClient = getClient()
@@ -59,7 +58,6 @@ async function translateFile(deeplClient: Translator, config: TranslationConfig)
 }
 
 async function translateFiles(deeplClient: Translator, config: TranslationConfig): Promise<void> {
-  const isSupportedFile = (f: string): boolean => SUPPORTED_EXTENSIONS.includes(f.substring(f.lastIndexOf('.')))
   const filesToTranslate = fs.readdirSync(config.sourcePath).filter(isSupportedFile)
   if (!filesToTranslate.length) {
     throw new Error('No files to translate')
