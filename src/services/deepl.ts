@@ -1,6 +1,6 @@
 import { getHbsBracketsPlaceholders, revertHbsBracketsFromPlaceholders } from '../helpers/hbs-brackets'
 import { Formality, Language, TagHandlingMode, TranslateTextOptions, Translator } from 'deepl-node'
-import { TranslateFileConfig } from '../types/local'
+import { TranslationConfig } from '../types/local'
 
 let cachedTranslations: Record<string, string> = {}
 
@@ -8,7 +8,7 @@ export function getClient(): Translator {
   return new Translator(process.env.DEEPL_API_KEY || '')
 }
 
-export function translateFn(client: Translator, config: TranslateFileConfig): (text: string) => Promise<string> {
+export function translateFn(client: Translator, config: TranslationConfig): (text: string) => Promise<string> {
   return async (text: string): Promise<string> => {
     if (cachedTranslations[text]) return cachedTranslations[text]
     if (!text.length) return ''

@@ -1,6 +1,6 @@
 import fs from 'fs'
 import { deepMap } from '../helpers/deep-map'
-import { TranslateFileConfig } from '../types/local'
+import { TranslationConfig } from '../types/local'
 import { getClient, getSupportedTargetLanguages, translateFn } from './deepl'
 import { SourceLanguageCode, TargetLanguageCode, Translator } from 'deepl-node'
 import { formatJSObject, formatTSObject } from '../helpers/utils'
@@ -8,14 +8,14 @@ import { formatJSObject, formatTSObject } from '../helpers/utils'
 const BASE_PATH = __dirname + '/../..'
 const SUPPORTED_EXTENSIONS = ['.json', '.js', '.ts']
 
-export async function translate(config: TranslateFileConfig): Promise<void> {
+export async function translate(config: TranslationConfig): Promise<void> {
   const deeplClient = getClient()
   await validateLanguages(deeplClient, config)
 
   return config.allFiles ? translateFiles(deeplClient, config) : translateFile(deeplClient, config)
 }
 
-export function prepareConfig(args: Record<string, string>): TranslateFileConfig {
+export function prepareConfig(args: Record<string, string>): TranslationConfig {
   return {
     allFiles: args.allFiles === 'true',
     sourcePath: `${BASE_PATH}/sources`,
@@ -27,7 +27,7 @@ export function prepareConfig(args: Record<string, string>): TranslateFileConfig
   }
 }
 
-export function validateConfig(config: TranslateFileConfig): void {
+export function validateConfig(config: TranslationConfig): void {
   ;[
     {
       error: 'Source path is required',
@@ -52,13 +52,13 @@ export function validateConfig(config: TranslateFileConfig): void {
   })
 }
 
-async function translateFile(deeplClient: Translator, config: TranslateFileConfig): Promise<void> {
+async function translateFile(deeplClient: Translator, config: TranslationConfig): Promise<void> {
   const fileContent = require(config.sourceFile)
   const translated = await deepMap(fileContent, translateFn(deeplClient, config))
   return saveFile(config.outputFile, translated)
 }
 
-async function translateFiles(deeplClient: Translator, config: TranslateFileConfig): Promise<void> {
+async function translateFiles(deeplClient: Translator, config: TranslationConfig): Promise<void> {
   const isSupportedFile = (f: string): boolean => SUPPORTED_EXTENSIONS.includes(f.substring(f.lastIndexOf('.')))
   const filesToTranslate = fs.readdirSync(config.sourcePath).filter(isSupportedFile)
   if (!filesToTranslate.length) {
@@ -74,7 +74,7 @@ async function translateFiles(deeplClient: Translator, config: TranslateFileConf
   }
 }
 
-async function validateLanguages(deeplClient: Translator, config: TranslateFileConfig): Promise<void> {
+async function validateLanguages(deeplClient: Translator, config: TranslationConfig): Promise<void> {
   const outputLanguages = await getSupportedTargetLanguages(deeplClient)
   if (!outputLanguages.find(language => language.code === config.outputLanguage)) {
     throw new Error('Output language is not supported')

@@ -1,6 +1,6 @@
 import { SourceLanguageCode, TargetLanguageCode } from 'deepl-node'
 
-export type TranslateFileConfig = {
+export type TranslationConfig = {
   allFiles: boolean
   sourcePath: string
   outputPath: string
