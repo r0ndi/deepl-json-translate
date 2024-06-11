@@ -18,7 +18,7 @@ export async function translateFile(config: TranslateFileConfig): Promise<void> 
 export function prepareConfig(args: Record<string, string>): TranslateFileConfig {
   return {
     sourceFile: `${BASE_PATH}/sources/${args.s}`,
-    outputFile: `${BASE_PATH}/outputs/${args.o}`,
+    outputFile: `${BASE_PATH}/outputs/${args.s}`,
     sourceLanguage: args.sl as SourceLanguageCode | null,
     outputLanguage: args.ol as TargetLanguageCode,
   }
@@ -42,9 +42,14 @@ async function validateLanguages(deeplClient: Translator, config: TranslateFileC
   if (!outputLanguages.find(language => language.code === config.outputLanguage)) {
     throw new Error('Output language is not supported')
   }
-
+  
+  const languageToSkip: string[] = ['en']
   const sourceLanguages = await getSupportedTargetLanguages(deeplClient)
-  if (!!config.sourceLanguage && !sourceLanguages.find(language => language.code === config.sourceLanguage)) {
+  if (
+    !!config.sourceLanguage
+    && !languageToSkip.includes(config.sourceLanguage)
+    && !sourceLanguages.find(language => language.code === config.sourceLanguage)
+  ) {
     throw new Error('Source language is not supported')
   }
 }

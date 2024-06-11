@@ -12,17 +12,16 @@ Lib to translate JSON / JS object by deepl api
     cp .env.example .env
     ```
 
-1. Create source file like `sources/pl.json` with json
+1. Create source file like `sources/test.json` with json
 
-1. Translate `sources/pl.json` to `outputs/en.json`
+1. Translate `sources/test.json` to `outputs/test.json`
     ```shell
-    npm run start:dev -- --sl pl --ol en-US --s pl.json --o en.json
+    npm run start:dev -- --sl pl --ol en-US --s test.json
     ```
 
 ## Arguments
 - `--ol` - output language
 - `--sl` - source language
-- `--o` - output filename
 - `--s` - source filename
 
 ## Author
