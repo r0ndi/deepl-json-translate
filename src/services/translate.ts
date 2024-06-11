@@ -6,9 +6,13 @@ import { SourceLanguageCode, TargetLanguageCode, Translator } from 'deepl-node'
 import { formatJSObject, formatTSObject } from '../helpers/utils'
 
 const BASE_PATH = __dirname + '/../..'
+const SUPPORTED_EXTENSIONS = ['.json', '.js', '.ts']
 
 export async function translate(config: TranslateFileConfig): Promise<void> {
-  return config.allFiles ? translateFiles(config) : translateFile(config)
+  const deeplClient = getClient()
+  await validateLanguages(deeplClient, config)
+
+  return config.allFiles ? translateFiles(deeplClient, config) : translateFile(deeplClient, config)
 }
 
 export function prepareConfig(args: Record<string, string>): TranslateFileConfig {
@@ -48,24 +52,21 @@ export function validateConfig(config: TranslateFileConfig): void {
   })
 }
 
-async function translateFile(config: TranslateFileConfig): Promise<void> {
-  const deeplClient = getClient()
-  await validateLanguages(deeplClient, config)
-
+async function translateFile(deeplClient: Translator, config: TranslateFileConfig): Promise<void> {
   const fileContent = require(config.sourceFile)
   const translated = await deepMap(fileContent, translateFn(deeplClient, config))
   return saveFile(config.outputFile, translated)
 }
 
-async function translateFiles(config: TranslateFileConfig): Promise<void> {
-  const deeplClient = getClient()
-  await validateLanguages(deeplClient, config)
+async function translateFiles(deeplClient: Translator, config: TranslateFileConfig): Promise<void> {
+  const isSupportedFile = (f: string): boolean => SUPPORTED_EXTENSIONS.includes(f.substring(f.lastIndexOf('.')))
+  const filesToTranslate = fs.readdirSync(config.sourcePath).filter(isSupportedFile)
+  if (!filesToTranslate.length) {
+    throw new Error('No files to translate')
+  }
 
-  const filesToTranslate = fs.readdirSync(config.sourcePath).filter(
-    file => ['.json', '.js', '.ts'].includes(file.substring(file.lastIndexOf('.')))
-  )
   for (const file of filesToTranslate) {
-    await translateFile({
+    await translateFile(deeplClient, {
       ...config,
       sourceFile: `${config.sourcePath}/${file}`,
       outputFile: `${config.outputPath}/${file}`,
