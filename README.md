@@ -16,7 +16,7 @@ Lib to translate JSON / JS object by deepl api
 
 1. Translate `sources/test.json` to `outputs/test.json`
     ```shell
-    npm run start:dev -- --sl pl --ol en-US --s test.json
+    npm run start:dev -- --sl en --ol de --s test.json
     ```
 
 ## Arguments
