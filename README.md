@@ -21,7 +21,8 @@ Lib to translate JSON / JS object by deepl api
 
 ## Scripts
 - `npm run translate -- --sl en --ol de --allFiles true` -> transaltions all files
-- `npm run generate-csv` -> generate csv file with summary
+- `npm run generate-csv -- --src en --out de --ori pl --oriName Polish` -> generate csv file with summary
+- `npm run parse-csv -- --s en --t de` -> parse csv file with fixed translations
 
 ## Arguments
 - `--ol` - output language

@@ -9,3 +9,10 @@ export type TranslationConfig = {
   sourceLanguage: SourceLanguageCode | null
   outputLanguage: TargetLanguageCode
 }
+
+export type CsvGeneratorConfig = {
+  srcLang: string
+  outLang: string
+  oriLang: string
+  oriName: string
+}

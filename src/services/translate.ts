@@ -3,7 +3,7 @@ import { deepMap } from '../helpers/deep-map'
 import { TranslationConfig } from '../types/local'
 import { getClient, getSupportedTargetLanguages, translateFn } from './deepl'
 import { SourceLanguageCode, TargetLanguageCode, Translator } from 'deepl-node'
-import { formatJSObject, formatTSObject, isSupportedFile } from '../helpers/utils'
+import { changeFileLang, formatJSObject, formatTSObject, isSupportedFile, saveFile } from '../helpers/utils'
 
 const BASE_PATH = __dirname + '/../..'
 
@@ -64,10 +64,11 @@ async function translateFiles(deeplClient: Translator, config: TranslationConfig
   }
 
   for (const file of filesToTranslate) {
+    const outputFile = changeFileLang(file, config.sourceLanguage || 'en', config.outputLanguage)
     await translateFile(deeplClient, {
       ...config,
       sourceFile: `${config.sourcePath}/${file}`,
-      outputFile: `${config.outputPath}/${file}`,
+      outputFile: `${config.outputPath}/${outputFile}`,
     })
   }
 }
@@ -87,10 +88,4 @@ async function validateLanguages(deeplClient: Translator, config: TranslationCon
   ) {
     throw new Error('Source language is not supported')
   }
-}
-
-function saveFile(path: string, content: Record<string, any>): void {
-  if (path.includes('.json')) return fs.writeFileSync(path, JSON.stringify(content, null, 2))
-  if (path.includes('.ts')) return fs.writeFileSync(path, formatTSObject(content, 2))
-  return fs.writeFileSync(path, formatJSObject(content, 2))
 }

@@ -5,6 +5,7 @@
   "main": "src/boot.ts",
   "scripts": {
     "generate-csv": "ts-node src/generate-csv.ts",
+    "parse-csv": "ts-node src/parse-csv.ts",
     "translate": "ts-node src/run-translation.ts"
   },
   "keywords": [

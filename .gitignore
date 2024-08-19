@@ -8,3 +8,4 @@ sources/*
 !sources/.gitkeep
 outputs/*
 !outputs/.gitkeep
+.DS_Store
