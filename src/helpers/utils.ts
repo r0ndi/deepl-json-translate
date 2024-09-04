@@ -1,15 +1,39 @@
 import fs from 'fs'
 
 export const formatObject = (content: Record<string, any>, indent: number = 2): string => {
-  const prepareKey = (key: string): string => key.includes('-') ? `'${key}'` : key
+  const prepareKey = (key: string): string => {
+    return key.includes('/') || key.includes('-') || key.includes(' ') || key.includes('+')
+      ? `'${key}'`
+      : key
+  }
+  const prepareValue = (value: string): string => {
+    return value
+      .replace(/'/g, '"')
+      .replace(/"s /g, "\\'s ")
+      .replace(/"t /g, "\\'t ")
+      .replace(/='/g, '="')
+  }
+
   const spacing = ' '.repeat(indent)
   const entries = Object.entries(content).map(([key, value]) => {
+    if (Array.isArray(value)) {
+      return `${spacing}${prepareKey(key)}: ${formatArray(value, indent)}`
+    }
     if (typeof value === 'object' && value !== null) {
       return `${spacing}${prepareKey(key)}: ${formatObject(value, indent + 2)}`
     }
-    return `${spacing}${prepareKey(key)}: '${value}'`
+
+    const preparedValue = prepareValue(value)
+    const valueWithQuotes = preparedValue.includes('"') ? `'${preparedValue}'` : `"${preparedValue}"`
+    return `${spacing}${prepareKey(key)}: ${valueWithQuotes}`.length > 120
+      ? `${spacing}${prepareKey(key)}:\n${' '.repeat(indent + 2)}${valueWithQuotes}`.replace(/"'/g, "'")
+      : `${spacing}${prepareKey(key)}: ${valueWithQuotes}`.replace(/"'/g, "'")
   })
   return `{\n${entries.join(',\n')}\n${' '.repeat(indent - 2)}}`
+}
+
+export const formatArray = (content: string[], indent: number): string => {
+  return `[\n${content.map((item) => `${' '.repeat(indent + 2)}'${item}'`).join(',\n')},\n${' '.repeat(indent)}]`
 }
 
 export const formatJSObject = (content: Record<string, any>, indent: number): string => {
@@ -25,7 +49,7 @@ export const isSupportedFile = (file: string): boolean => {
 }
 
 export const changeFileLang = (file: string, from: string, to: string): string => {
-  return file.replace(`${from}.json`, `${to}.json`)
+  return file.replace(`${from}.`, `${to}.`)
 }
 
 export const flattenObject = (

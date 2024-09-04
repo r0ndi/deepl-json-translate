@@ -27,7 +27,7 @@ export function generateCsv({ srcLang, oriLang, outLang, oriName }: CsvGenerator
     const originalTranslations = flattenObject(originalFileContent)
 
     for (const key in sourceTranslations) {
-      if (!outputFileContent[key]) {
+      if (!outputTranslations[key]) {
         console.log(`Missing translation in ${file} with ${key}`)
         continue
       }

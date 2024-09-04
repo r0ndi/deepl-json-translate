@@ -1,4 +1,4 @@
-const BRACKET_VARIABLE_REPLACEMENT = 'XXX'
+const BRACKET_VARIABLE_REPLACEMENT = 'XAXBXCX'
 
 /* Hide .HBS variables behind placeholder so as not to translate them */
 export function getHbsBracketsPlaceholders(text: string): [string, string[]] {

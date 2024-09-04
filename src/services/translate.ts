@@ -3,7 +3,7 @@ import { deepMap } from '../helpers/deep-map'
 import { TranslationConfig } from '../types/local'
 import { getClient, getSupportedTargetLanguages, translateFn } from './deepl'
 import { SourceLanguageCode, TargetLanguageCode, Translator } from 'deepl-node'
-import { changeFileLang, formatJSObject, formatTSObject, isSupportedFile, saveFile } from '../helpers/utils'
+import { changeFileLang, isSupportedFile, saveFile } from '../helpers/utils'
 
 const BASE_PATH = __dirname + '/../..'
 
