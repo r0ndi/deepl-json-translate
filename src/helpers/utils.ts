@@ -8,10 +8,8 @@ export const formatObject = (content: Record<string, any>, indent: number = 2): 
   }
   const prepareValue = (value: string): string => {
     return value
-      .replace(/'/g, '"')
       .replace(/"s /g, "\\'s ")
       .replace(/"t /g, "\\'t ")
-      .replace(/='/g, '="')
   }
 
   const spacing = ' '.repeat(indent)
@@ -26,8 +24,8 @@ export const formatObject = (content: Record<string, any>, indent: number = 2): 
     const preparedValue = prepareValue(value)
     const valueWithQuotes = preparedValue.includes('"') ? `'${preparedValue}'` : `"${preparedValue}"`
     return `${spacing}${prepareKey(key)}: ${valueWithQuotes}`.length > 120
-      ? `${spacing}${prepareKey(key)}:\n${' '.repeat(indent + 2)}${valueWithQuotes}`.replace(/"'/g, "'")
-      : `${spacing}${prepareKey(key)}: ${valueWithQuotes}`.replace(/"'/g, "'")
+      ? `${spacing}${prepareKey(key)}:\n${' '.repeat(indent + 2)}${valueWithQuotes}`
+      : `${spacing}${prepareKey(key)}: ${valueWithQuotes}`
   })
   return `{\n${entries.join(',\n')}\n${' '.repeat(indent - 2)}}`
 }
