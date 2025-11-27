@@ -7,9 +7,25 @@ export const formatObject = (content: Record<string, any>, indent: number = 2): 
       : key
   }
   const prepareValue = (value: string): string => {
-    return value
+    const preparedValue = value
       .replace(/"s /g, "\\'s ")
       .replace(/"t /g, "\\'t ")
+      .replace(/href=(http:\/\/[^\s"]+)"/g, 'href="$1"')
+      .replace(/href=(https:\/\/[^\s"]+)"/g, 'href="$1"')
+      .replace(/href=(mailto:[^\s"]+)"/g, 'href="$1"')
+      .replace(/href=(\/[^\s"]+)"/g, 'href="$1"')
+      .replace(/class=([^\s"]+ [^\s"]+)"/g, 'class="$1"')
+      .replace(/class=([^\s"]+)"/g, 'class="$1"')
+      .replace(/href={{([^}]+)}}"/g, 'href="{{$1}}"')
+      .replace(/href=([^\s"]+)"/g, 'href="$1"')
+      .replace(/target=([^\s"]+)"/g, 'target="$1"')
+      .replace(/"'/g, "'")
+    return (preparedValue.match(/"/g) || []).length % 2 !== 0 ? preparedValue.replace(/"([^"]*)$/, '$1') : preparedValue
+  }
+  const prepareValueWithQuotes = (value: string): string => {
+    if (value.includes('"')) return `'${value}'`
+    if (value.startsWith('"') && value.endsWith('"')) return value
+    return `"${value}"`
   }
 
   const spacing = ' '.repeat(indent)
@@ -22,7 +38,7 @@ export const formatObject = (content: Record<string, any>, indent: number = 2): 
     }
 
     const preparedValue = prepareValue(value)
-    const valueWithQuotes = preparedValue.includes('"') ? `'${preparedValue}'` : `"${preparedValue}"`
+    const valueWithQuotes = prepareValueWithQuotes(preparedValue)
     return `${spacing}${prepareKey(key)}: ${valueWithQuotes}`.length > 120
       ? `${spacing}${prepareKey(key)}:\n${' '.repeat(indent + 2)}${valueWithQuotes}`
       : `${spacing}${prepareKey(key)}: ${valueWithQuotes}`
