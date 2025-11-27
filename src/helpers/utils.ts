@@ -89,3 +89,13 @@ export const saveFile = (path: string, content: Record<string, any>): void => {
   if (path.includes('.ts')) return fs.writeFileSync(path, formatTSObject(content, 2))
   return fs.writeFileSync(path, formatJSObject(content, 2))
 }
+
+export const parseLang = (language: string): string | undefined => {
+  const languageMap: { [key: string]: string } = {
+    'pt-PT': 'pt',
+    'pt-BR': 'pt',
+    'en-US': 'en',
+    'en-GB': 'en',
+  }
+  return languageMap[language] || language
+}

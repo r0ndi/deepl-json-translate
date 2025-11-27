@@ -53,7 +53,7 @@ export function validateConfig(config: TranslationConfig): void {
 
 async function translateFile(deeplClient: Translator, config: TranslationConfig): Promise<void> {
   const fileContent = require(config.sourceFile)
-  const translated = await deepMap(fileContent, translateFn(deeplClient, config))
+  const translated = await deepMap(fileContent, await translateFn(deeplClient, config))
   return saveFile(config.outputFile, translated)
 }
 

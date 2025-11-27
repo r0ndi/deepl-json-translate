@@ -6,7 +6,8 @@
   "scripts": {
     "generate-csv": "ts-node src/generate-csv.ts",
     "parse-csv": "ts-node src/parse-csv.ts",
-    "translate": "ts-node src/run-translation.ts"
+    "translate": "ts-node src/run-translation.ts",
+    "create-glossary": "ts-node src/create-glossary.ts"
   },
   "keywords": [
     "deepl",

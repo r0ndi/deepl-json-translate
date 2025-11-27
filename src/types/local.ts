@@ -1,4 +1,4 @@
-import { SourceLanguageCode, TargetLanguageCode } from 'deepl-node'
+import { GlossaryEntries, LanguageCode, SourceLanguageCode, TargetLanguageCode } from 'deepl-node'
 
 export type TranslationConfig = {
   allFiles: boolean
@@ -15,4 +15,10 @@ export type CsvGeneratorConfig = {
   outLang: string
   oriLang: string
   oriName: string
+}
+
+export type GlossaryContent = {
+  sourceLang: LanguageCode
+  targetLang: LanguageCode
+  entries: GlossaryEntries
 }
