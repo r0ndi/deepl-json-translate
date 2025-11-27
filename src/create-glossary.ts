@@ -6,8 +6,8 @@ dotenv.config({ path: './.env' })
 process.on('unhandledRejection', err => console.error(err))
 
 async function main() {
-  const glossaryId = process.env.DEEPL_GLOSSARY_ID || 'glossary-id'
-  await createGlossary(glossaryId)
+  const glossaryName = process.env.DEEPL_GLOSSARY_NAME || 'glossary-name'
+  await createGlossary(glossaryName)
 
   console.log('========= ========= =========')
   console.info('Glossary generated!')

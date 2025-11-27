@@ -6,7 +6,7 @@ import fs from 'fs'
 const BASE_PATH = __dirname + '/../..'
 const GLOSSARY_PATH = `${BASE_PATH}/sources/glossary.csv`
 
-export async function createGlossary(glossaryId: string): Promise<void> {
+export async function createGlossary(glossaryName: string): Promise<void> {
   if (!fs.existsSync(GLOSSARY_PATH)) {
     console.warn('Glossary file not found, skipping glossary creation.')
     return
@@ -17,7 +17,7 @@ export async function createGlossary(glossaryId: string): Promise<void> {
 
   const glossaryContent = parseGlossaryFileSource()
   for (const glossary of glossaryContent) {
-    const response = await updateGlossary(client)(glossaryId, glossary)
+    const response = await updateGlossary(client)(glossaryName, glossary)
     console.log(`Created ${response.glossaryId}: ${response.sourceLang} -> ${response.targetLang} [Items: ${response.entryCount}]`)
   }
 }
